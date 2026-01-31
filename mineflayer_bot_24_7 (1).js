@@ -1,7 +1,6 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const armorManager = require('mineflayer-armor-manager');
-const AutoAuth = require('mineflayer-auto-auth');
 
 const BOT_USERNAME = process.env.BOT_USERNAME || 'OnlineBot';
 const BOT_HOST = process.env.BOT_HOST || 'ValleyKingdom.aternos.me';
@@ -14,9 +13,7 @@ function createBot() {
     host: BOT_HOST,
     port: BOT_PORT,
     username: BOT_USERNAME,
-    version: BOT_VERSION,
-    plugins: [AutoAuth],
-    AutoAuth: 'bot112022'
+    version: BOT_VERSION
   });
 
   bot.loadPlugin(armorManager);
@@ -68,3 +65,4 @@ function createBot() {
 }
 
 createBot();
+
