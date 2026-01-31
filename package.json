@@ -7,12 +7,13 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "mineflayer": "^4.6.1",
-    "mineflayer-pvp": "^1.9.0",
-    "mineflayer-pathfinder": "^1.8.5",
-    "mineflayer-auto-auth": "^1.0.3",
-    "mineflayer-armor-manager": "^1.0.0",
-    "minecraft-data": "^2.0.0"
-  }
+  "mineflayer": "^4.6.1",
+  "mineflayer-pvp": "mineflayer/mineflayer-pvp",
+  "mineflayer-pathfinder": "^1.8.5",
+  "mineflayer-auto-auth": "^1.0.3",
+  "mineflayer-armor-manager": "^1.0.0",
+  "minecraft-data": "^2.0.0"
 }
+
+
 
