@@ -1,17 +1,18 @@
 {
   "name": "minecraft-bot-24-7",
   "version": "1.0.0",
-  "description": "Mineflayer bot ready to run 24/7 on free hosting",
+  "description": "Mineflayer bot ready to run 24/7 on free hosting without PvP",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "mineflayer": "^4.6.1",
-    "mineflayer-pvp": "npm:mineflayer-pvp-ml@1.0.0",
     "mineflayer-pathfinder": "^1.8.5",
     "mineflayer-auto-auth": "^1.0.3",
     "mineflayer-armor-manager": "^1.0.0",
     "minecraft-data": "^2.0.0"
   }
 }
+
+
