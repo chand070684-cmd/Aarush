@@ -5,7 +5,7 @@ const armorManager = require('mineflayer-armor-manager');
 const BOT_USERNAME = process.env.BOT_USERNAME || 'OnlineBot';
 const BOT_HOST = process.env.BOT_HOST || 'ValleyKingdom.aternos.me';
 const BOT_PORT = parseInt(process.env.BOT_PORT) || 16940;
-const BOT_VERSION = process.env.BOT_VERSION || false;
+const BOT_VERSION = process.env.BOT_VERSION || 1.21.11;
 const OWNER = process.env.OWNER || 'Aarush2482';
 
 function createBot() {
