@@ -1,4 +1,3 @@
-// index.js
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const pvp = require('mineflayer-pvp').plugin;
@@ -44,6 +43,35 @@ function createBot() {
     bot.pathfinder.setGoal(new goals.GoalBlock(guardPos.x, guardPos.y, guardPos.z));
   }
 
+  bot.on('playerCollect', (collector, itemDrop) => {
+    if (collector !== bot.entity) return;
+
+    setTimeout(() => {
+      const sword = bot.inventory.items().find(item => item.name.includes('sword'));
+      if (sword) bot.equip(sword, 'hand');
+    }, 150);
+
+    setTimeout(() => {
+      const shield = bot.inventory.items().find(item => item.name.includes('shield'));
+      if (shield) bot.equip(shield, 'off-hand');
+    }, 250);
+  });
+
+  bot.on('physicTick', () => {
+    if (bot.pvp.target) return;
+    if (bot.pathfinder.isMoving()) return;
+
+    const entity = bot.nearestEntity();
+    if (entity) bot.lookAt(entity.position.offset(0, entity.height, 0));
+  });
+
+  bot.on('physicTick', () => {
+    if (!guardPos) return;
+    const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 && e.mobType !== 'Armor Stand';
+    const entity = bot.nearestEntity(filter);
+    if (entity) bot.pvp.attack(entity);
+  });
+
   bot.on('chat', (username, message) => {
     if (username !== OWNER) return;
     if (message === 'guard') {
@@ -59,13 +87,7 @@ function createBot() {
     }
   });
 
-  bot.on('physicTick', () => {
-    if (!guardPos) return;
-    const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 && e.mobType !== 'Armor Stand';
-    const entity = bot.nearestEntity(filter);
-    if (entity) bot.pvp.attack(entity);
-  });
-
+  // Auto-reconnect if bot disconnects
   bot.on('end', () => {
     console.log('Bot disconnected, reconnecting in 5 seconds...');
     setTimeout(createBot, 5000);
