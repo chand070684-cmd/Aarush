@@ -1,68 +1,59 @@
-const mineflayer = require('mineflayer');
-const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
-const armorManager = require('mineflayer-armor-manager');
+const mineflayer = require('mineflayer')
 
-const BOT_USERNAME = process.env.BOT_USERNAME || 'OnlineBot';
-const BOT_HOST = process.env.BOT_HOST || 'ValleyKingdom.aternos.me';
-const BOT_PORT = parseInt(process.env.BOT_PORT) || 16940;
-const BOT_VERSION = process.env.BOT_VERSION = '1.20.4';
-const OWNER = process.env.OWNER || 'Aarush2482';
+const BOT_USERNAME = 'OnlineBot'
+const BOT_HOST = 'ValleyKingdom.aternos.me'
+const BOT_PORT = 16940
+const BOT_VERSION = '1.20.4'
+const OWNER = 'Aarush2482'
 
-function createBot() {
+function createBot () {
   const bot = mineflayer.createBot({
     host: BOT_HOST,
     port: BOT_PORT,
     username: BOT_USERNAME,
     version: BOT_VERSION
-  });
+  })
 
-  bot.loadPlugin(armorManager);
-  bot.loadPlugin(pathfinder);
+  bot.once('spawn', () => {
+    console.log('Bot spawned successfully')
 
-  let guardPos = null;
+    const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
+    const armorManager = require('mineflayer-armor-manager')
+    const mcData = require('minecraft-data')(bot.version)
 
-  function guardArea(pos) {
-    guardPos = pos.clone();
-    moveToGuardPos();
-  }
+    bot.loadPlugin(pathfinder)
+    bot.loadPlugin(armorManager)
 
-  function stopGuarding() {
-    guardPos = null;
-    bot.pathfinder.setGoal(null);
-  }
+    const movements = new Movements(bot, mcData)
+    bot.pathfinder.setMovements(movements)
 
-  function moveToGuardPos() {
-    const mcData = require('minecraft-data')(bot.version);
-    bot.pathfinder.setMovements(new Movements(bot, mcData));
-    bot.pathfinder.setGoal(new goals.GoalBlock(guardPos.x, guardPos.y, guardPos.z));
-  }
+    bot.on('chat', (username, message) => {
+      if (username !== OWNER) return
 
-  bot.on('chat', (username, message) => {
-    if (username !== OWNER) return;
-
-    if (message === 'guard') {
-      const player = bot.players[username];
-      if (player) {
-        bot.chat('I will guard!');
-        guardArea(player.entity.position);
+      if (message === 'come') {
+        const player = bot.players[username]
+        if (!player) return
+        bot.pathfinder.setGoal(
+          new goals.GoalNear(
+            player.entity.position.x,
+            player.entity.position.y,
+            player.entity.position.z,
+            1
+          )
+        )
       }
-    }
+    })
+  })
 
-    if (message === 'stop') {
-      bot.chat('Stopping!');
-      stopGuarding();
-    }
-  });
-
-  // Auto-reconnect if bot disconnects
   bot.on('end', () => {
-    console.log('Bot disconnected, reconnecting in 5 seconds...');
-    setTimeout(createBot, 5000);
-  });
+    console.log('Disconnected. Reconnecting in 5s...')
+    setTimeout(createBot, 5000)
+  })
 
-  bot.on('kicked', console.log);
-  bot.on('error', console.log);
+  bot.on('error', err => console.log('Error:', err))
+  bot.on('kicked', reason => console.log('Kicked:', reason))
 }
 
-createBot();
+createBot()
+
 
