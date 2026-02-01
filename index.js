@@ -25,7 +25,7 @@ function createBot () {
   })
 
   bot.on('end', () => {
-    console.log('🔄 Disconnected, reconnecting in 5s...')
+    console.log('🔄 Disconnected, reconnecting in 5 seconds...')
     setTimeout(createBot, 5000)
   })
 
