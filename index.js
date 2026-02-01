@@ -4,7 +4,6 @@ const BOT_USERNAME = 'OnlineBot'
 const BOT_HOST = 'ValleyKingdom.aternos.me'
 const BOT_PORT = 16940
 const BOT_VERSION = '1.20.4'
-const OWNER = 'Aarush2482'
 
 function createBot () {
   const bot = mineflayer.createBot({
@@ -15,45 +14,23 @@ function createBot () {
   })
 
   bot.once('spawn', () => {
-    console.log('Bot spawned successfully')
+    console.log('✅ Bot spawned and running 24/7')
+    bot.chat('Bot is online!')
+  })
 
-    const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
-    const armorManager = require('mineflayer-armor-manager')
-    const mcData = require('minecraft-data')(bot.version)
-
-    bot.loadPlugin(pathfinder)
-    bot.loadPlugin(armorManager)
-
-    const movements = new Movements(bot, mcData)
-    bot.pathfinder.setMovements(movements)
-
-    bot.on('chat', (username, message) => {
-      if (username !== OWNER) return
-
-      if (message === 'come') {
-        const player = bot.players[username]
-        if (!player) return
-        bot.pathfinder.setGoal(
-          new goals.GoalNear(
-            player.entity.position.x,
-            player.entity.position.y,
-            player.entity.position.z,
-            1
-          )
-        )
-      }
-    })
+  bot.on('chat', (username, message) => {
+    if (message === 'ping') {
+      bot.chat('pong')
+    }
   })
 
   bot.on('end', () => {
-    console.log('Disconnected. Reconnecting in 5s...')
+    console.log('🔄 Disconnected, reconnecting in 5s...')
     setTimeout(createBot, 5000)
   })
 
-  bot.on('error', err => console.log('Error:', err))
-  bot.on('kicked', reason => console.log('Kicked:', reason))
+  bot.on('kicked', r => console.log('Kicked:', r))
+  bot.on('error', e => console.log('Error:', e))
 }
 
 createBot()
-
-
